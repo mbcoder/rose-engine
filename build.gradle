@@ -57,5 +57,5 @@ task copyNatives(type: Copy) {
 
 run {
     dependsOn copyNatives
-    mainClassName = 'com.mycompany.app.App'
+    mainClassName = 'com.mbcoder.rose_engine.RoseEngineLauncher'
 }
