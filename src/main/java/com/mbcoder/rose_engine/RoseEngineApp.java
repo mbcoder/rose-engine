@@ -3,22 +3,25 @@ package com.mbcoder.rose_engine;
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.data.RangeDomain;
 import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.BasemapStyle;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.view.Graphic;
-import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.mapping.view.*;
+import com.esri.arcgisruntime.symbology.ColorUtil;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.lang.Math;
 
 public class RoseEngineApp extends Application {
 
     private MapView mapView;
+    private SceneView sceneView;
     private static int PULSES_PER_REV = 8000;
     private SimpleMarkerSymbol circleMarker;
     private  GraphicsOverlay graphicsOverlay;
@@ -42,34 +45,39 @@ public class RoseEngineApp extends Application {
         Scene scene = new Scene(stackPane);
         stage.setScene(scene);
 
-        circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000,1);
+        circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, ColorUtil.colorToArgb(Color.BLACK),1);
 
         // create a MapView to display the map and add it to the stack pane
         mapView = new MapView();
         stackPane.getChildren().add(mapView);
 
+        BackgroundGrid grid = new BackgroundGrid();
+
+
+        grid.setColor(ColorUtil.colorToArgb(Color.GOLD));
+        grid.setVisible(false);
+        mapView.setBackgroundGrid(grid);
+
+
         // create an ArcGISMap with an imagery basemap
-        ArcGISMap map = new ArcGISMap(Basemap.createImagery());
-        //ArcGISMap map = new ArcGISMap();
+        ArcGISMap map = new ArcGISMap(SpatialReferences.getWebMercator());
 
         // display the map by setting the map on the map view
         mapView.setMap(map);
-
         graphicsOverlay = new GraphicsOverlay();
         mapView.getGraphicsOverlays().add(graphicsOverlay);
-
         mapView.setViewpointCenterAsync(new Point(0,0), 2000);
 
         int offsetAngle = 0;
 
-        for(int radius=2; radius<=100; radius+=2) {
+        for(int radius=10; radius<=100; radius+=2) {
             System.out.println("rad " + radius);
-            drawCycle(radius, 3, 12, offsetAngle);
+            drawCycle(radius, 2, 36, offsetAngle);
 
             offsetAngle+=1;
         }
 
-        //drawCycle(100,5,12);
+        //drawCycle(100,2,36, 0);
         //drawSomething();
 
 
